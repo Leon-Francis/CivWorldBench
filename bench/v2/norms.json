@@ -1,0 +1,35 @@
+{
+  "city_size_total": {
+    "norm": 500
+  },
+  "culture": {
+    "norm": 200000
+  },
+  "gold": {
+    "norm": 300000
+  },
+  "n_allies": {
+    "norm": 7
+  },
+  "n_cities": {
+    "norm": 80
+  },
+  "n_civilian_units": {
+    "norm": 300
+  },
+  "n_enemies": {
+    "norm": 6
+  },
+  "n_military_units": {
+    "norm": 500
+  },
+  "n_techs": {
+    "norm": 80
+  },
+  "population": {
+    "norm": 40000
+  },
+  "score": {
+    "norm": 5000
+  }
+}

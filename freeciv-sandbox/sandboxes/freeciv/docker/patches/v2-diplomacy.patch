@@ -1,0 +1,56 @@
+diff -ru a/ai/default/daidiplomacy.c b/ai/default/daidiplomacy.c
+--- a/ai/default/daidiplomacy.c	2025-12-12 06:08:15.000000000 +0800
++++ b/ai/default/daidiplomacy.c	2026-09-09 01:46:05.417800278 +0800
+@@ -210,7 +210,7 @@
+                                                struct player* player1,
+                                                struct player* player2)
+ {
+-  return (player1->ai_common.love[player_index(player2)] > - (MAX_AI_LOVE * 4 / 10)
++  return (player1->ai_common.love[player_index(player2)] > - (MAX_AI_LOVE * 6 / 10)
+           && dai_diplomacy_get(ait, player1, player2)->countdown == -1);
+ }
+ 
+@@ -1057,6 +1057,12 @@
+       if (pplayers_allied(pplayer, aplayer)) {
+         amount += ai->diplomacy.love_incr / 3;
+       }
++      if (player_diplstate_get(pplayer, aplayer)->type == DS_CEASEFIRE) {
++        /* wm-v2: a ceasefire that holds rebuilds trust quickly, so that the
++         * peace clause (req_love_for_peace) is reachable before the 16-turn
++         * ceasefire expires.  Stock: +15/turn from ~-400 never gets there. */
++        amount += ai->diplomacy.love_incr * 2;
++      }
+       /* Increase love by each enemy they are at war with */
+       players_iterate(eplayer) {
+         if (WAR(eplayer, aplayer) && WAR(pplayer, eplayer)) {
+@@ -1125,8 +1131,17 @@
+   players_iterate(aplayer) {
+     int *love = &pplayer->ai_common.love[player_index(aplayer)];
+ 
+-    if (aplayer == best_target && best_desire > 0) {
+-      int reduction = MIN(best_desire, MAX_AI_LOVE / 20);
++    if (aplayer == best_target && best_desire > 0
++        && !pplayers_at_war(pplayer, aplayer)) {
++      /* wm-v2: stock code hates the most desirable target by 50/turn for ever,
++       * also while already at war with it -- which pins love at -1000 and makes
++       * war an absorbing state (measured: War->Peace 0.0% in 30 turns).  Here the
++       * grudge only builds *before* a war (the desire to start one) and scales
++       * with the Aggressive trait: 5/turn at aggr 10, 25 at 50, 75 at 150. */
++      int reduction = MIN(best_desire,
++                          MAX_AI_LOVE / 40
++                          * ai_trait_get_value(TRAIT_AGGRESSIVE, pplayer)
++                          / TRAIT_DEFAULT_VALUE);
+ 
+       *love -= reduction;
+       DIPLO_LOG(ait, LOG_DEBUG, pplayer, aplayer, "Wants war, reducing "
+@@ -1656,7 +1671,9 @@
+   max_sr = TRAIT_MAX_VALUE_SR;
+   aggr_sr = sqrt(aggr);
+ 
+-  war_threshold = (MAX_AI_LOVE * (0.70 + aggr_sr / max_sr / 2.0)) - MAX_AI_LOVE;
++  /* wm-v2: stock formula spans only -268..-178 over aggr 10..150; this one
++   * spans -360..-15 so the trait has a measurable effect on war declarations. */
++  war_threshold = (MAX_AI_LOVE * (0.52 + aggr_sr / max_sr * 1.9)) - MAX_AI_LOVE;
+ 
+   if (need_targets && target && most_hatred < war_threshold
+       && dai_diplomacy_get(ait, pplayer, target)->countdown == -1) {

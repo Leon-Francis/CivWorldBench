@@ -1,0 +1,30 @@
+{
+  "title": "CivWorldBench: Evaluating Language World Models in Structured Multi-Agent Sandbox Worlds",
+  "project": "CivWorldBench",
+  "version": "1.0.0",
+  "date": "2026-10-12",
+  "authors": [
+    {"name": "Ang Li", "given_names": "Ang", "family_names": "Li", "affiliations": [1]},
+    {"name": "Haofei Yu", "given_names": "Haofei", "family_names": "Yu", "affiliations": [2]},
+    {"name": "Zhengwei Tao", "given_names": "Zhengwei", "family_names": "Tao", "affiliations": [3, 4]},
+    {"name": "Liang Chen", "given_names": "Liang", "family_names": "Chen", "affiliations": [3, 4]},
+    {"name": "Kuan Li", "given_names": "Kuan", "family_names": "Li", "affiliations": [3, 6]},
+    {"name": "Miaomiao Li", "given_names": "Miaomiao", "family_names": "Li", "affiliations": [1]},
+    {"name": "Chenran Cai", "given_names": "Chenran", "family_names": "Cai", "affiliations": [5]},
+    {"name": "Bin Liang", "given_names": "Bin", "family_names": "Liang", "affiliations": [1]},
+    {"name": "Jiaxuan You", "given_names": "Jiaxuan", "family_names": "You", "affiliations": [2]},
+    {"name": "Kam-Fai Wong", "given_names": "Kam-Fai", "family_names": "Wong", "affiliations": [1], "corresponding": true}
+  ],
+  "affiliations": [
+    {"id": 1, "name": "The Chinese University of Hong Kong"},
+    {"id": 2, "name": "University of Illinois at Urbana-Champaign"},
+    {"id": 3, "name": "UniPat AI"},
+    {"id": 4, "name": "Peking University"},
+    {"id": 5, "name": "Tencent"},
+    {"id": 6, "name": "The Hong Kong University of Science and Technology"}
+  ],
+  "contact": {"name": "Ang Li", "email": "angli@link.cuhk.edu.hk"},
+  "github": {"repo_id": "Leon-Francis/CivWorldBench", "pages_url": "https://leon-francis.github.io/CivWorldBench/"},
+  "dataset": {"status": "in_preparation", "repo_id": null, "revision": null},
+  "paper": {"arxiv_id": null, "url": "https://leon-francis.github.io/CivWorldBench/CivWorldBench.pdf", "pdf_url": "https://leon-francis.github.io/CivWorldBench/CivWorldBench.pdf"}
+}

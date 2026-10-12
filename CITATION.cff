@@ -1,0 +1,129 @@
+{
+  "cff-version": "1.2.0",
+  "type": "software",
+  "message": "If you use this code, please cite the accompanying paper.",
+  "title": "CivWorldBench",
+  "version": "1.0.0",
+  "date-released": "2026-10-12",
+  "license": "GPL-2.0-or-later",
+  "url": "https://leon-francis.github.io/CivWorldBench/",
+  "repository-code": "https://github.com/Leon-Francis/CivWorldBench",
+  "authors": [
+    {
+      "given-names": "Ang",
+      "family-names": "Li",
+      "affiliation": "The Chinese University of Hong Kong"
+    },
+    {
+      "given-names": "Haofei",
+      "family-names": "Yu",
+      "affiliation": "University of Illinois at Urbana-Champaign"
+    },
+    {
+      "given-names": "Zhengwei",
+      "family-names": "Tao",
+      "affiliation": "UniPat AI; Peking University"
+    },
+    {
+      "given-names": "Liang",
+      "family-names": "Chen",
+      "affiliation": "UniPat AI; Peking University"
+    },
+    {
+      "given-names": "Kuan",
+      "family-names": "Li",
+      "affiliation": "UniPat AI; The Hong Kong University of Science and Technology"
+    },
+    {
+      "given-names": "Miaomiao",
+      "family-names": "Li",
+      "affiliation": "The Chinese University of Hong Kong"
+    },
+    {
+      "given-names": "Chenran",
+      "family-names": "Cai",
+      "affiliation": "Tencent"
+    },
+    {
+      "given-names": "Bin",
+      "family-names": "Liang",
+      "affiliation": "The Chinese University of Hong Kong"
+    },
+    {
+      "given-names": "Jiaxuan",
+      "family-names": "You",
+      "affiliation": "University of Illinois at Urbana-Champaign"
+    },
+    {
+      "given-names": "Kam-Fai",
+      "family-names": "Wong",
+      "affiliation": "The Chinese University of Hong Kong"
+    }
+  ],
+  "contact": [
+    {
+      "given-names": "Ang",
+      "family-names": "Li",
+      "affiliation": "The Chinese University of Hong Kong",
+      "email": "angli@link.cuhk.edu.hk"
+    }
+  ],
+  "preferred-citation": {
+    "type": "report",
+    "title": "CivWorldBench: Evaluating Language World Models in Structured Multi-Agent Sandbox Worlds",
+    "authors": [
+      {
+        "given-names": "Ang",
+        "family-names": "Li",
+        "affiliation": "The Chinese University of Hong Kong"
+      },
+      {
+        "given-names": "Haofei",
+        "family-names": "Yu",
+        "affiliation": "University of Illinois at Urbana-Champaign"
+      },
+      {
+        "given-names": "Zhengwei",
+        "family-names": "Tao",
+        "affiliation": "UniPat AI; Peking University"
+      },
+      {
+        "given-names": "Liang",
+        "family-names": "Chen",
+        "affiliation": "UniPat AI; Peking University"
+      },
+      {
+        "given-names": "Kuan",
+        "family-names": "Li",
+        "affiliation": "UniPat AI; The Hong Kong University of Science and Technology"
+      },
+      {
+        "given-names": "Miaomiao",
+        "family-names": "Li",
+        "affiliation": "The Chinese University of Hong Kong"
+      },
+      {
+        "given-names": "Chenran",
+        "family-names": "Cai",
+        "affiliation": "Tencent"
+      },
+      {
+        "given-names": "Bin",
+        "family-names": "Liang",
+        "affiliation": "The Chinese University of Hong Kong"
+      },
+      {
+        "given-names": "Jiaxuan",
+        "family-names": "You",
+        "affiliation": "University of Illinois at Urbana-Champaign"
+      },
+      {
+        "given-names": "Kam-Fai",
+        "family-names": "Wong",
+        "affiliation": "The Chinese University of Hong Kong"
+      }
+    ],
+    "year": 2026,
+    "url": "https://leon-francis.github.io/CivWorldBench/CivWorldBench.pdf"
+  }
+}

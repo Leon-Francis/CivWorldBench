@@ -1,0 +1,88 @@
+diff -ru a/ai/default/aiunit.c b/ai/default/aiunit.c
+--- a/ai/default/aiunit.c	2026-09-19 01:37:45.520693637 +0800
++++ b/ai/default/aiunit.c	2026-09-19 01:37:45.544693950 +0800
+@@ -3324,6 +3324,7 @@
+   unit_data->passenger = 0;
+   unit_data->bodyguard = 0;
+   unit_data->charge = 0;
++  unit_data->saved_city_tile = -1;          /* wm-v3 */
+ 
+   unit_set_ai_data(punit, ait, unit_data);
+ }
+@@ -3375,6 +3376,19 @@
+                      unitstr, aitstr);
+   secfile_insert_int(file, unit_data->bodyguard, "%s.%sbodyguard",
+                      unitstr, aitstr);
++  /* wm-v3 (2026-09-19): a build-city mission must survive a save/load.  It did
++   * not, and a driver that steps the game one turn per server process therefore
++   * had AI settlers that re-ran find_best_city_placement every turn: each turn
++   * they walked one tile towards a freshly chosen site, spent their movement and
++   * never stood on a target long enough to found.  Measured over 16 games x 100
++   * turns of stepping: 71 foundings where the continuous mainline makes 187
++   * (doc 17 §6.7.3).  Only the mission's target tile is stored; the task is
++   * re-established in dai_auto_settler_run. */
++  secfile_insert_int(file,
++                     (unit_data->task == AIUNIT_BUILD_CITY
++                      && punit->goto_tile != NULL)
++                     ? tile_index(punit->goto_tile) : -1,
++                     "%s.%scity_task_tile", unitstr, aitstr);
+ }
+ 
+ /**********************************************************************//**
+@@ -3398,6 +3412,9 @@
+   unit_data->bodyguard
+     = secfile_lookup_int_default(file, 0, "%s.%sbodyguard",
+                                  unitstr, aitstr);
++  unit_data->saved_city_tile                                 /* wm-v3 */
++    = secfile_lookup_int_default(file, -1, "%s.%scity_task_tile",
++                                 unitstr, aitstr);
+ }
+ 
+ struct role_unit_cb_data
+diff -ru a/ai/default/aiunit.h b/ai/default/aiunit.h
+--- a/ai/default/aiunit.h	2026-09-19 01:37:45.522693663 +0800
++++ b/ai/default/aiunit.h	2026-09-19 01:37:45.543693937 +0800
+@@ -44,6 +44,13 @@
+   bool done;  /* we are done controlling this unit this turn */
+ 
+   enum ai_unit_task task;
++
++  /* wm-v3 (2026-09-19): tile index of a build-city mission read back from a
++   * savegame, or -1.  The task itself cannot be restored while loading (the
++   * savegame loader clears punit->goto_tile after the AI hook runs, and the
++   * city map does not exist yet), so it is re-established in
++   * dai_auto_settler_run, which runs after citymap_turn_init(). */
++  int saved_city_tile;
+ };
+ 
+ struct unit_type_ai
+diff -ru a/ai/default/daisettler.c b/ai/default/daisettler.c
+--- a/ai/default/daisettler.c	2026-09-19 01:37:45.525693703 +0800
++++ b/ai/default/daisettler.c	2026-09-19 01:37:45.544693950 +0800
+@@ -1044,6 +1044,26 @@
+ 
+   CHECK_UNIT(punit);
+ 
++  /* wm-v3 (2026-09-19): re-establish a build-city mission read from a savegame.
++   * Done here because citymap_turn_init() has run by now and punit->goto_tile
++   * survives (the loader clears it right after the AI's own load hook). */
++  {
++    struct unit_ai *wm_data = def_ai_unit_data(punit, ait);
++
++    if (wm_data->saved_city_tile >= 0) {
++      struct tile *wm_tile = index_to_tile(&(wld.map), wm_data->saved_city_tile);
++
++      wm_data->saved_city_tile = -1;
++      if (wm_tile != NULL
++          && wm_data->task == AIUNIT_NONE
++          && unit_is_cityfounder(punit)
++          && city_can_be_built_here(nmap, wm_tile, punit, FALSE)) {
++        punit->goto_tile = wm_tile;
++        dai_unit_new_task(ait, punit, AIUNIT_BUILD_CITY, wm_tile);
++      }
++    }
++  }
++
+   /*** If we are on a city mission: Go where we should ***/
+ 
+ BUILD_CITY:

@@ -1,0 +1,159 @@
+{
+  "name": "Sandbox-World Forecasting Index",
+  "abbreviation": "SWFI",
+  "version": "1.0",
+  "scope": "Freeciv sandbox world-model tasks; not a validated real-world forecasting proxy",
+  "levels": {
+    "L1": [
+      "quantity",
+      "event"
+    ],
+    "L2": [
+      "trait",
+      "rules"
+    ],
+    "L3": [
+      "capture",
+      "direction",
+      "specificity"
+    ]
+  },
+  "level_weights": {
+    "L1": 0.3333333333333333,
+    "L2": 0.3333333333333333,
+    "L3": 0.3333333333333333
+  },
+  "metric_weights": {
+    "quantity": 0.16666666666666666,
+    "event": 0.16666666666666666,
+    "trait": 0.16666666666666666,
+    "rules": 0.16666666666666666,
+    "capture": 0.1111111111111111,
+    "direction": 0.1111111111111111,
+    "specificity": 0.1111111111111111
+  },
+  "setting_weights": {
+    "bench-basic|v1": 0.3333333333333333,
+    "bench-basic|v2": 0.3333333333333333,
+    "bench-gen|v1": 0.3333333333333333
+  },
+  "setting_labels": {
+    "bench-basic|v1": "omni-ID",
+    "bench-basic|v2": "ego",
+    "bench-gen|v1": "OOD"
+  },
+  "ranges": {
+    "bench-basic|v1": {
+      "quantity": [
+        0,
+        0.6837095571649595
+      ],
+      "event": [
+        0,
+        0.10776219804330728
+      ],
+      "trait": [
+        0,
+        0.66
+      ],
+      "rules": [
+        0,
+        0.9311111111111111
+      ],
+      "capture": [
+        -1,
+        0.39116730884645895
+      ],
+      "direction": [
+        0,
+        0.92
+      ],
+      "specificity": [
+        0,
+        1
+      ]
+    },
+    "bench-basic|v2": {
+      "quantity": [
+        0,
+        0.6821393317331476
+      ],
+      "event": [
+        0,
+        0.10637735161280883
+      ],
+      "trait": [
+        0,
+        0.66
+      ],
+      "rules": [
+        0,
+        0.8640740740740741
+      ],
+      "capture": [
+        -1,
+        0.39116730884645895
+      ],
+      "direction": [
+        0,
+        0.92
+      ],
+      "specificity": [
+        0,
+        1
+      ]
+    },
+    "bench-gen|v1": {
+      "quantity": [
+        0,
+        0.6769108222130982
+      ],
+      "event": [
+        0,
+        0.10493474630076803
+      ],
+      "trait": [
+        0,
+        0.66
+      ],
+      "rules": [
+        0,
+        0.9049999999999999
+      ],
+      "capture": [
+        -1,
+        0.3001160897722706
+      ],
+      "direction": [
+        0,
+        0.92
+      ],
+      "specificity": [
+        0,
+        1
+      ]
+    }
+  },
+  "raw_accuracy_baselines": {
+    "bench-basic|v1": {
+      "trait": 0.5,
+      "direction": 0.5,
+      "rules": 0.4041531419059509
+    },
+    "bench-basic|v2": {
+      "trait": 0.5,
+      "direction": 0.5,
+      "rules": 0.4044952310169701
+    },
+    "bench-gen|v1": {
+      "trait": 0.5,
+      "direction": 0.5,
+      "rules": 0.40547551978537894
+    }
+  },
+  "scaling": "100 * equal-setting mean of equal-level means of (score-floor)/(ceiling-floor)",
+  "missing_policy": "Reject undefined components; no imputation or weight redistribution. Inherits existing scorer coverage.",
+  "clipping": "No additional clipping; CAPTURE and SPECIFICITY retain their existing metric-level clipping",
+  "interpretation": "0 and 100 are reference endpoints, not guaranteed bounds or a success probability",
+  "prior_exposure": "Existing model and external outcomes were viewed before definition; only new local model outcomes are held out"
+}

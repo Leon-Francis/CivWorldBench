@@ -1,0 +1,65 @@
+diff -ru a/ai/default/daidomestic.c b/ai/default/daidomestic.c
+--- a/ai/default/daidomestic.c	2025-12-12 06:08:15.000000000 +0800
++++ b/ai/default/daidomestic.c	2026-09-09 01:15:35.778856419 +0800
+@@ -417,7 +417,7 @@
+    * For optimal performance AI should build more caravans, but
+    * we want it to build less valued buildings too. */
+   trader_trait = ai_trait_get_value(TRAIT_TRADER, pplayer);
+-  want /= (130 * TRAIT_DEFAULT_VALUE / trader_trait);
++  want = want * trader_trait / (130.0 * TRAIT_DEFAULT_VALUE);
+ 
+   /* Increase want for trade routes if our economy is very weak.
+    * We may have enough gold, but only because we have already set
+@@ -618,8 +618,8 @@
+     cur = adv_new_choice();
+     adv_choice_set_use(cur, "improvement");
+     building_advisor_choose(pcity, cur);
+-    cur->want = cur->want * (0.5 + (ai_trait_get_value(TRAIT_BUILDER, pplayer)
+-                                    / TRAIT_DEFAULT_VALUE / 2));
++    cur->want = cur->want * (0.35 + ((double) ai_trait_get_value(TRAIT_BUILDER, pplayer)
++                                    / TRAIT_DEFAULT_VALUE * 0.65));
+     choice = adv_better_choice_free(choice, cur);
+ 
+     /* Consider building caravan-type units for trade route */
+diff -ru a/ai/default/daimilitary.c b/ai/default/daimilitary.c
+--- a/ai/default/daimilitary.c	2025-12-12 06:08:15.000000000 +0800
++++ b/ai/default/daimilitary.c	2026-09-09 01:16:06.185237478 +0800
+@@ -1728,9 +1728,9 @@
+                                      choice->value.utype)) != B_LAST
+        && !city_has_building(pcity, improvement_by_number(id))) {
+     choice->value.building = improvement_by_number(id);
+-    choice->want = choice->want * (0.5 + (ai_trait_get_value(TRAIT_BUILDER,
+-                                                             city_owner(pcity))
+-                                          / TRAIT_DEFAULT_VALUE / 2));
++    choice->want = choice->want * (0.35 + ((double) ai_trait_get_value(TRAIT_BUILDER,
++                                                              city_owner(pcity))
++                                           / TRAIT_DEFAULT_VALUE * 0.65));
+     choice->type = CT_BUILDING;
+     adv_choice_set_use(choice, "veterancy building");
+   }
+@@ -1864,8 +1864,8 @@
+           choice->value.building = pimprove;
+           /* building_want is hacked by assess_danger() */
+           choice->want = pcity->server.adv->building_want[wall_id];
+-          choice->want = choice->want * (0.5 + (ai_trait_get_value(TRAIT_BUILDER, pplayer)
+-                                                / TRAIT_DEFAULT_VALUE / 2));
++          choice->want = choice->want * (0.35 + ((double) ai_trait_get_value(TRAIT_BUILDER, pplayer)
++                                                / TRAIT_DEFAULT_VALUE * 0.65));
+           if (urgency == 0 && choice->want > DAI_WANT_BELOW_MIL_EMERGENCY) {
+             choice->want = DAI_WANT_BELOW_MIL_EMERGENCY;
+           }
+diff -ru a/server/plrhand.c b/server/plrhand.c
+--- a/server/plrhand.c	2025-12-12 06:08:15.000000000 +0800
++++ b/server/plrhand.c	2026-09-09 01:15:35.749856055 +0800
+@@ -2124,7 +2124,10 @@
+     }
+   } players_iterate_alive_end;
+ 
+-  return DS_WAR;
++  /* wm-sandbox v2: first contact defaults to peace instead of war, so that the
++   * AI's love/alliance ladder and the aggressiveness trait have room to act
++   * (freeciv 3.1 has no ruleset option for this). */
++  return DS_PEACE;
+ }
+ 
+ /**********************************************************************//**

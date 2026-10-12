@@ -1,0 +1,47 @@
+diff -ru a/ai/default/daidiplomacy.c b/ai/default/daidiplomacy.c
+--- a/ai/default/daidiplomacy.c	2026-09-09 02:02:47.838376657 +0800
++++ b/ai/default/daidiplomacy.c	2026-09-09 02:02:47.857376895 +0800
+@@ -378,8 +378,10 @@
+ 
+     /* This guy is allied to one of our enemies. Only accept
+      * ceasefire. */
++    /* wm-v2 (bloc): only an *alliance* with an enemy's ally is refused;
++     * peace is allowed, so blocs can settle pairwise instead of all-or-nothing. */
+     if ((penemy = get_allied_with_enemy_player(pplayer, aplayer))
+-        && pclause->type != CLAUSE_CEASEFIRE) {
++        && pclause->type == CLAUSE_ALLIANCE) {
+       dai_diplo_notify(aplayer, _("*%s (AI)* First break alliance with %s, %s."),
+                        player_name(pplayer), player_name(penemy),
+                        player_name(aplayer));
+@@ -389,7 +391,7 @@
+ 
+     /* They were allied with an enemy at the beginning of the turn. */
+     if (adip->is_allied_with_enemy
+-        && pclause->type != CLAUSE_CEASEFIRE) {
++        && pclause->type == CLAUSE_ALLIANCE) {
+       dai_diplo_notify(aplayer, _("*%s (AI)* I would like to see you keep your "
+                                   "distance from %s for some time, %s."),
+                        player_name(pplayer), player_name(adip->is_allied_with_enemy),
+@@ -1705,8 +1707,10 @@
+         && adip->countdown == -1
+         && !adip->is_allied_with_ally
+         && !pplayers_at_war(pplayer, aplayer)
+-        && (player_diplstate_get(pplayer, aplayer)->type != DS_CEASEFIRE
+-            || fc_rand(5) < 1)) {
++        /* wm-v2 (bloc): a signed ceasefire is honoured; stock broke it with
++         * probability 1/5 per turn to help an ally, which ended 84-86% of all
++         * ceasefires early (pilot 2026-09-09). */
++        && player_diplstate_get(pplayer, aplayer)->type != DS_CEASEFIRE) {
+       DIPLO_LOG(ait, LOG_DEBUG, pplayer, aplayer, "plans war to help ally %s",
+                 player_name(adip->at_war_with_ally));
+       war_countdown(ait, pplayer, aplayer, 2 + map_size_checked(),
+@@ -1888,8 +1892,7 @@
+ 
+       case DS_CEASEFIRE:
+         clause.type = CLAUSE_PEACE;
+-        if (adip->at_war_with_ally
+-            || (is_human(aplayer) && adip->asked_about_peace > 0)
++        if ((is_human(aplayer) && adip->asked_about_peace > 0)
+             || dai_goldequiv_clause(ait, pplayer, aplayer, &clause,
+                                     FALSE, DS_PEACE) < 0) {
+           break;

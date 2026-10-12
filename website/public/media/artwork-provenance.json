@@ -1,0 +1,24 @@
+{
+  "upstream": "Freeciv R3_1_6",
+  "sha256": {
+    "hexemplio.tilespec": "e158fb3ddd50125efc323ab46b07cf6d45b8ca7d0876a14d9923652f1dad9b2f",
+    "hexemplio/terrain.spec": "faa0cedb5c6ce61cff36292e9bae17982fb4a035b3ad071b4877c77dd993f18f",
+    "hexemplio/terrain.png": "01b00aab72f7f81c3d0d450e10baff827ea5e90fd466312efb79431769d024b2",
+    "hexemplio/hills.spec": "dcf5962ad5e22e74aa230f72798973778ee1c57aa9657a465dc92417184fb39b",
+    "hexemplio/hills.png": "3441603b0aaf8b6368eb8bb4c7f500b4b138c25ea4a77d63455a4be806c50b19",
+    "hexemplio/mountains.spec": "3beb740a6f506e1197a122f3bda4edd063e6657cf71328ac9538e3588a1d9722",
+    "hexemplio/mountains.png": "2ac14716679bf937f2cf39dcb251d92d68cdb979c6f4aeca010e42cacc9654f0",
+    "hexemplio/forests.spec": "11a3f7bb5627cd48ba76c08b486ff7b1e0a490621a6a997445703e95fc14dda6",
+    "hexemplio/forests.png": "f6621f35cdf662aaf353428bc7c0e907606fcd6e800d6b224ec3add2d62fbae2",
+    "hexemplio/cities.spec": "c1819d77158e681a04d427ab1bbacda742bf255e5662a9e413c00e149bb6c24b",
+    "hexemplio/cities.png": "66dfadb751a2efec908cd556ffcc4d29078e2db119535ae65999557dbbcf6fd8",
+    "hexemplio/roads.spec": "79dfed8b53116ebaaf4bae6189f8ddf2c656578c393bacc953db6152849a7e19",
+    "hexemplio/roads.png": "cda57e2b00a2ec22bef4821edc2d0cb7e28c91594de8d558fd3d9fef5684dfe0",
+    "hexemplio/rivers.spec": "4a94b08566a03d522742c5cea7617e4f6b324f78171353295092aa6b66f30f11",
+    "hexemplio/rivers.png": "c6e307446e2120ea6aea4e4178df3f106028ff60b400b9a7051f33026e3ff56b",
+    "amplio2/units.spec": "942fdb5391a4dd2315889f53bd45d9d1365fdacf8b4a1d7de67462271d344da7",
+    "amplio2/units.png": "d326676b3a69dc00845207ba3edcbdf141881777fb91f0410477c1ab2189159c",
+    "amplio2/extra_units.spec": "2afcf80013072206235deb497d0cf3c65d397889862a7a6882bdaf11d0f78270",
+    "amplio2/extra_units.png": "de52c21c096246adad2e28f3038997e0280a4a47ef85c1f231f7001bfb6e39ae"
+  }
+}

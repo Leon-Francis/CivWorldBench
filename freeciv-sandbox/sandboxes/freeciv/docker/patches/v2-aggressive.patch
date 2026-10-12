@@ -1,0 +1,58 @@
+diff -ru a/ai/default/daidiplomacy.c b/ai/default/daidiplomacy.c
+--- a/ai/default/daidiplomacy.c	2026-09-09 15:02:01.816757694 +0800
++++ b/ai/default/daidiplomacy.c	2026-09-09 15:02:01.835757933 +0800
+@@ -210,7 +210,14 @@
+                                                struct player* player1,
+                                                struct player* player2)
+ {
+-  return (player1->ai_common.love[player_index(player2)] > - (MAX_AI_LOVE * 6 / 10)
++  /* wm-v2 (aggr 2): how much hatred still allows a ceasefire depends on the
++   * Aggressive trait: aggr 10 -> love > -850, aggr 50 -> -693, aggr 150 -> -300.
++   * Pilot 2026-09-09: with (aggr 3) this is what makes the trait identifiable
++   * (within-world Spearman -0.03 -> +0.42). */
++  int aggr = ai_trait_get_value(TRAIT_AGGRESSIVE, player1);
++  int threshold = -(850 - (aggr - 10) * 550 / 140);
++
++  return (player1->ai_common.love[player_index(player2)] > threshold
+           && dai_diplomacy_get(ait, player1, player2)->countdown == -1);
+ }
+ 
+@@ -1325,33 +1332,33 @@
+   case DAI_WR_SPACE:
+     dai_diplo_notify(target, _("*%s (AI)* Space will never be yours."),
+                      player_name(pplayer));
+-    adip->countdown = -10;
++    adip->countdown = -(10 * ai_trait_get_value(TRAIT_AGGRESSIVE, pplayer) / TRAIT_DEFAULT_VALUE); /* wm-v2 (aggr 3): war stubbornness scales with the trait */
+     break;
+   case DAI_WR_BEHAVIOUR:
+     dai_diplo_notify(target,
+                      _("*%s (AI)* I have tolerated your vicious antics "
+                        "long enough! To war!"),
+                      player_name(pplayer));
+-    adip->countdown = -20;
++    adip->countdown = -(20 * ai_trait_get_value(TRAIT_AGGRESSIVE, pplayer) / TRAIT_DEFAULT_VALUE); /* wm-v2 (aggr 3): war stubbornness scales with the trait */
+     break;
+   case DAI_WR_NONE:
+     dai_diplo_notify(target, _("*%s (AI)* Peace in ... some other time."),
+                      player_name(pplayer));
+-    adip->countdown = -10;
++    adip->countdown = -(10 * ai_trait_get_value(TRAIT_AGGRESSIVE, pplayer) / TRAIT_DEFAULT_VALUE); /* wm-v2 (aggr 3): war stubbornness scales with the trait */
+     break;
+   case DAI_WR_HATRED:
+     dai_diplo_notify(target,
+                      _("*%s (AI)* Finally I get around to you! Did "
+                        "you really think you could get away with your crimes?"),
+                      player_name(pplayer));
+-    adip->countdown = -20;
++    adip->countdown = -(20 * ai_trait_get_value(TRAIT_AGGRESSIVE, pplayer) / TRAIT_DEFAULT_VALUE); /* wm-v2 (aggr 3): war stubbornness scales with the trait */
+     break;
+   case DAI_WR_EXCUSE:
+     dai_diplo_notify(target,
+                      _("*%s (AI)* Your covert hostilities brought "
+                        "this war upon you!"),
+                      player_name(pplayer));
+-    adip->countdown = -20;
++    adip->countdown = -(20 * ai_trait_get_value(TRAIT_AGGRESSIVE, pplayer) / TRAIT_DEFAULT_VALUE); /* wm-v2 (aggr 3): war stubbornness scales with the trait */
+     break;
+   case DAI_WR_ALLIANCE:
+     if (adip->at_war_with_ally) {

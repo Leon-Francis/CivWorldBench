@@ -1,0 +1,18 @@
+diff -ru a/ai/default/daicity.c b/ai/default/daicity.c
+--- a/ai/default/daicity.c	2025-12-12 06:08:15.000000000 +0800
++++ b/ai/default/daicity.c	2026-09-09 21:20:21.359651198 +0800
+@@ -272,6 +272,14 @@
+         && !(dai_on_war_footing(ait, pplayer) && city_data->choice.want > 0
+              && pcity->id != adv->wonder_city)) {
+       newchoice = domestic_advisor_choose_build(ait, pplayer, pcity);
++      /* wm-v2 (builder): the military advisor's want is discounted by the
++       * Builder trait right where it competes with the domestic advisor
++       * (x1.67 at builder 10, x1.0 at 50, x0.5 at 150).  Scaling only the
++       * building wants (v2-engine.patch) never moved the build mix, because the
++       * two advisors' wants rarely sit close enough for a 0.5-2.3x factor to
++       * flip the comparison.  Emergencies and war footing bypass this branch. */
++      city_data->choice.want = city_data->choice.want
++        / (0.5 + (double) ai_trait_get_value(TRAIT_BUILDER, pplayer) / (2.0 * TRAIT_DEFAULT_VALUE));
+       adv_choice_copy(&(city_data->choice), adv_better_choice(&(city_data->choice), newchoice));
+       adv_free_choice(newchoice);
+     }

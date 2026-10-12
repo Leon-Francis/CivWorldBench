@@ -1,0 +1,5 @@
+# CPU analysis environment, tested with Python 3.12.
+numpy==2.5.2
+matplotlib==3.11.2
+httpx==0.28.1
+PyMuPDF==1.28.2

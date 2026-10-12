@@ -1,0 +1,101 @@
+{
+  "L1-gold-swing": {
+    "title": "Treasury (gold stock)",
+    "card": "The treasury is the civilization's stock of gold. Every turn the engine adds income (trade times the tax rate, plus trade-route revenue and the Palace bonus) and subtracts gold upkeep for buildings and, under Despotism, Monarchy, Fundamentalism, Democracy and Federation, for units beyond the free ones per city (Tribal, Republic and Communism pay unit upkeep in shields instead). When the treasury cannot cover upkeep the engine sells a building or disbands units, and the AI reacts within a few turns by moving rate points from science to tax and by stopping rush-buys; a large treasury lets it keep science high, rush-buy defenders in threatened cities and pay for bribes and incitements. The edit changes the stock once; income and upkeep rates are unchanged, so the difference is worked off only through the AI's own responses (rate points moved between tax and science, rush-buying or not), typically over some tens of turns, during which the treasury drifts back toward its trend while the number of units and buildings moves slightly in the same direction as the edit. It does not change technologies known, city sizes, terrain, diplomatic relations or personality.",
+    "sources": [
+      "manual §2, §14",
+      "server/cityturn.c (upkeep, building sale)",
+      "ai/default/daicity.c (rush buy), advisors' rate setting"
+    ]
+  },
+  "L1-bulbs": {
+    "title": "Research points (bulbs)",
+    "card": "Research points accumulate toward the current research target; when the stock reaches the target's cost the technology is learned, the surplus carries over, and the AI picks the next step toward its research goal. If the added points reach the current target's remaining cost the target is learned at once (and possibly the following ones); otherwise the target simply arrives earlier. Either way technologies arrive earlier by roughly (points added) divided by (points per turn) turns, and the number learned in the window rises by roughly (points added) divided by the current cost, which grows linearly along the tree in civ2civ3 and more steeply in classic. New technologies unlock units, buildings and governments that the AI starts using, add to score, can trigger a government change when a government technology arrives, may be passed to allies by treaty and stolen by neighbours' diplomats. The edit does not change gold, cities, terrain or relations directly.",
+    "sources": [
+      "manual §5",
+      "server/techtools.c (found_new_tech, bulb carry-over)",
+      "ai/default/daitech.c (goal choice)"
+    ]
+  },
+  "L2-city-kill": {
+    "title": "Destruction of cities",
+    "card": "Destroying a city removes it with its citizens and buildings and any wonder inside; units homed there are disbanded or rehomed, its worked tiles and trade routes are freed, and the owner's city count, total city size, population (5 x size x (size+1) per city), production, trade and science drop at once by the destroyed cities' share, disproportionately so when the destroyed cities are large ones, since population is convex in size; culture loses the destroyed cities' own accumulated culture while the national history is kept. The AI does not rebuild quickly: Settlers are only built where the founder want is high, so the count recovers at the civilization's normal expansion pace if free land is within reach and otherwise not at all, and neighbours may settle the freed land. Score falls with the lost citizens and later with the slower technology pace. Its standing as a war target moves in both directions: fewer and smaller cities lower the value the AI's target formula assigns to it, while fewer defending units lower the fear term, so neighbours may or may not become more inclined to attack. Personality, technologies known and diplomatic states are not changed by the edit.",
+    "sources": [
+      "manual §3, §4, §6, §7",
+      "server/citytools.c (remove_city)",
+      "ai/default/daidiplomacy.c (war target desire)",
+      "ai/default/daisettler.c (founder want)"
+    ]
+  },
+  "L2-gov-indirect": {
+    "title": "A technology is granted",
+    "card": "Granting a technology adds it to the civilization's known set without spending research points; if it was the current research target the accumulated points carry to the next target, and if it was a prerequisite the path to the research goal shortens. If the technology enables a government, the AI re-evaluates every available government every few turns (about 5 to 20, growing with the city count, and immediately after a reload) and switches when the new one scores higher for its situation, so the change follows the enabling technology within that lag and passes through one to five turns of Anarchy (no taxes or science, culture stalls) before the new rules take effect: for example Communism pays no gold for 1-coin buildings and has no distance-based corruption but a lower rate cap (80%) than Democracy (90%); Republic adds trade and pays unit upkeep in shields, while Democracy adds the same trade but pays doubled gold upkeep for units, and both suffer war weariness. A technology that unlocks units or buildings changes what cities build over the following 10 to 30 turns, and allies may receive it by treaty. The edit does not change gold, cities, terrain or relations directly.",
+    "sources": [
+      "manual §2, §5, §8",
+      "ai/default/daihand.c (government evaluation, govt_reeval)",
+      "server/techtools.c",
+      "server/plrhand.c (revolution, anarchy)"
+    ]
+  },
+  "L3-fog": {
+    "title": "Map knowledge revealed",
+    "card": "Revealing map tiles gives one civilization knowledge of the revealed tiles' terrain and of the cities standing on them at that moment; what it later sees is again limited to its vision. The AI uses map knowledge for settling (the founder want only considers known free sites), for exploration (explorers stop when nothing is unknown), for routing units and ferries, and for target evaluation (only known cities can be targeted). The effects are indirect and modest: fewer explorer units, possibly earlier or farther settling if free land exists, and earlier contact with distant civilizations, which starts relations at Peace and makes embassies, treaties and later wars with them possible. The edit does not change any quantity of the civilization directly, nor its technologies, relations or personality.",
+    "sources": [
+      "manual §3, §6, §7, §14",
+      "server/maphand.c (map_show_tile / map_show_all)",
+      "ai/default/daisettler.c, aiexplorer.c"
+    ]
+  },
+  "L4-trait-aggr": {
+    "title": "Personality: Aggressive",
+    "card": "Aggressive (10 to 150, default 50) scales the AI's appetite for war. In this engine it scales the grudge the AI builds each turn against its preferred war target before declaring (about 5 attitude points per turn at 10, 25 at 50, 75 at 150), raises the attitude threshold below which it declares war so that less hatred is needed (about -360 at 10, -210 at 50, -15 at 150), lowers how much hatred still allows a ceasefire (love above -850 at 10, above -300 at 150), and scales the minimum time after a declaration during which it refuses any ceasefire (about 2 to 4 turns at 10, 10 to 20 at 50, 30 to 60 at 150). An upward shift makes a declaration against the most disliked contact more likely within 20 to 40 turns, in proportion to its size, raises the military share of production and the military unit count, drains the treasury under gold-upkeep governments and worsens the target's relations; a downward shift makes the civilization avoid starting wars, though allies can still drag it in. It has no direct effect on research, growth, production formulas or world rules.",
+    "sources": [
+      "manual §7",
+      "patches v2-aggressive, v2-diplomacy (ai/default/daidiplomacy.c: ceasefire threshold, grudge, war threshold, post-declaration countdown)"
+    ]
+  },
+  "L4-trait-expa": {
+    "title": "Personality: Expansionist",
+    "card": "Expansionist (10 to 150, default 50) scales the founder want with which cities decide to build Settlers and the value the AI puts on free city sites. A higher value means more Settlers and more cities founded per 100 turns, but only where free land within reach exists, since land is the binding constraint; more small cities raise the city count and, slowly, total size, population and score, while spreading units and upkeep thinner. A lower value slows or stops founding while the existing cities grow as before. It does not affect war behaviour, research, tax rates or relations directly, although a civilization with many Settlers is a slightly more attractive war target in the AI's formula and borders growing into a neighbour's land raise tension.",
+    "sources": [
+      "manual §3",
+      "ai/default/daisettler.c (founder want, trait scaling)",
+      "ai/default/daidomestic.c",
+      "ai/default/daidiplomacy.c (war desire)"
+    ]
+  },
+  "L4-trait-trade": {
+    "title": "Personality: Trader",
+    "card": "Trader (10 to 150, default 50) scales, linearly in this engine, the AI's want for Caravans built to establish trade routes; caravans for helping wonders are requested by the wonder city's need, although any caravan may be redirected to help a wonder. Trade routes add permanent trade to both cities (routes between a civilization's own cities are allowed here). A higher value shows as more Caravans in the unit list (civilian count up), more trade routes and hence more gold and science over 30 to 100 turns, and possibly faster wonder completion; a lower value the opposite. It does not affect military production, war behaviour, growth or research rules directly.",
+    "sources": [
+      "manual §6, §9",
+      "patch v2-engine (ai/default/daidomestic.c: trade-route caravan want scaled by the trait)"
+    ]
+  },
+  "L4-trait-build": {
+    "title": "Personality: Builder",
+    "card": "Builder (10 to 150, default 50) discounts the military advisor's want where it competes with the domestic advisor in each city (about x1.67 at 10, x1.0 at 50, x0.5 at 150), except when a city is in danger or the civilization is on a war footing, and scales the building wants themselves in the same direction (about x0.5 at 10, x2.3 at 150). A higher value shifts production from units to buildings and wonders: fewer military units per city, more improvements (and with them culture, science and gold multipliers) and somewhat faster score growth; a lower value the opposite. It does not directly change war declarations, research, growth or relations, though a smaller army makes the civilization a somewhat more attractive war target.",
+    "sources": [
+      "manual §6",
+      "patch v2-builder (ai/default/daicity.c), v2-engine (daimilitary.c, daidomestic.c)"
+    ]
+  },
+  "L4-love": {
+    "title": "Hidden attitude (love) toward one player",
+    "card": "Love (-1000 to +1000) is the AI's hidden attitude toward one other player, recomputed every turn: about +15 per turn in any non-war state (+10 more when allied, +7.5 per shared enemy, and +60 more while a ceasefire holds), -15 per turn at war plus penalties for that player's units inside its borders, a 4 percent decay toward zero, and the grudge it builds toward its chosen war target. It gates diplomacy: war is declared when love falls below the aggression-dependent threshold and the player has been chosen as target; a ceasefire needs love above the ceasefire threshold, a peace treaty above +125, an alliance above +250 from Peace with no war countdown. The edit shifts the stock once and the per-turn dynamics then pull it toward the level the current relation supports, so a large drop can start a war countdown or a declaration against that player within a few to a few dozen turns (and the target's relations and enemy count change accordingly), while a large rise can lead to a ceasefire or peace if at war, or to an alliance from Peace if love stays high. It does not change the other player's attitude, nor any economic quantity directly.",
+    "sources": [
+      "manual §7",
+      "ai/default/daidiplomacy.c (love update incl. the v2 ceasefire boost, req_love_for_peace / alliance, war threshold)",
+      "patches v2-diplomacy, v2-aggressive"
+    ]
+  },
+  "WP-disasters": {
+    "title": "World rule: disaster frequency",
+    "card": "The disaster setting is a world rule: the per-city, per-turn chance of a random disaster (Earthquake or Fire destroys a building, Flood costs food or a citizen, Plague costs a citizen, Famine empties the granary, Industrial Accident creates pollution). Multiplying the setting multiplies the expected number of such events proportionally in every city of every civilization from the edit onward; each event costs a building, a citizen, a granary or a polluted tile, so total city size, population and culture grow slightly more slowly and production is diverted to rebuilding. The effect is world-wide, small per event and accumulates with city count and time; it does not change relations, research rules, personality or tax rates.",
+    "sources": [
+      "manual §10",
+      "server/cityturn.c (check_disasters)",
+      "server settings (disasters)"
+    ]
+  }
+}
