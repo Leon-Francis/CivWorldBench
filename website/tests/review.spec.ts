@@ -832,7 +832,9 @@ for (const width of [1440, 390]) {
     await expect(page.locator('a[href*="huggingface.co"], .evidence-download')).toHaveCount(0);
     await expect(page.locator("#resources")).not.toContainText("PUBLIC RELEASE PENDING");
     await expect(page.locator("#bibtex")).toContainText("Wong, Kam-Fai");
-    await expect(page.locator("#bibtex")).not.toContainText("arxiv");
+    await expect(page.locator("#bibtex")).toContainText("eprint = {2610.16450}");
+    await expect(page.locator("#bibtex")).toContainText("primaryClass = {cs.CL}");
+    await expect(page.locator(".hero-actions a").first()).toHaveAttribute("href", "https://arxiv.org/abs/2610.16450");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBeTruthy();
     await page.screenshot({ path: screenshotPath(info, "public-top.png") });
     await page.locator(".research-credits").screenshot({ path: screenshotPath(info, "authors.png") });

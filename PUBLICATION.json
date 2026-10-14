@@ -26,5 +26,5 @@
   "contact": {"name": "Ang Li", "email": "angli@link.cuhk.edu.hk"},
   "github": {"repo_id": "Leon-Francis/CivWorldBench", "pages_url": "https://leon-francis.github.io/CivWorldBench/"},
   "dataset": {"status": "in_preparation", "repo_id": null, "revision": null},
-  "paper": {"arxiv_id": null, "url": "https://leon-francis.github.io/CivWorldBench/CivWorldBench.pdf", "pdf_url": "https://leon-francis.github.io/CivWorldBench/CivWorldBench.pdf"}
+  "paper": {"arxiv_id": "2610.16450", "url": "https://arxiv.org/abs/2610.16450", "pdf_url": "https://arxiv.org/pdf/2610.16450", "primary_class": "cs.CL", "doi": "10.48550/arXiv.2610.16450"}
 }

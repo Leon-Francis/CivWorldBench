@@ -124,6 +124,14 @@
       }
     ],
     "year": 2026,
-    "url": "https://leon-francis.github.io/CivWorldBench/CivWorldBench.pdf"
+    "url": "https://arxiv.org/abs/2610.16450",
+    "identifiers": [
+      {
+        "type": "other",
+        "value": "2610.16450",
+        "description": "arXiv"
+      }
+    ],
+    "doi": "10.48550/arXiv.2610.16450"
   }
 }

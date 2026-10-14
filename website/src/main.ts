@@ -23,6 +23,7 @@ import {
   Check,
 } from "lucide";
 import publication from "../../PUBLICATION.json";
+import bibtex from "../../CITATION.bib?raw";
 
 type Point = {
   turn: number;
@@ -250,13 +251,7 @@ function render() {
     url?: string;
   }[];
   const codeUrl = `https://github.com/${publication.github.repo_id}`;
-  const paperUrl = publication.paper.pdf_url;
-  const bibtex = `@misc{li2026civworldbench,
-  title = {${publication.title}},
-  author = {${publication.authors.map((a) => `${a.family_names}, ${a.given_names}`).join(" and ")}},
-  year = {2026},
-  url = {${paperUrl}}
-}`;
+  const paperUrl = publication.paper.url;
   app.innerHTML = `
     <a class="skip-link" href="#method">Skip to research</a>
     <header class="site-header"><a class="brand" href="#">${icon("grid-3x3")}<span>CivWorldBench</span></a>

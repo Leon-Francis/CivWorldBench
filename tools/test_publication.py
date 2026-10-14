@@ -72,6 +72,48 @@ class PublicationTests(unittest.TestCase):
             with self.subTest(section=section, field=field), self.assertRaises(ValueError):
                 publication.validate(config)
 
+    def test_confirmed_arxiv_metadata_generates_complete_citations(self):
+        self.config["paper"] = {
+            "arxiv_id": "2610.00001", "url": "https://arxiv.org/abs/2610.00001",
+            "pdf_url": "https://arxiv.org/pdf/2610.00001", "primary_class": "cs.CL",
+            "doi": "10.48550/arXiv.2610.00001",
+        }
+        self.write_config()
+        self.assertEqual(self.run_silently(), 0)
+        self.assertEqual(self.run_silently(["--check"]), 0)
+        citation = json.loads((self.root / "CITATION.cff").read_text())["preferred-citation"]
+        self.assertEqual(citation["url"], self.config["paper"]["url"])
+        self.assertEqual(citation["doi"], self.config["paper"]["doi"])
+        self.assertEqual(citation["identifiers"], [
+            {"type": "other", "value": "2610.00001", "description": "arXiv"}
+        ])
+        bib = (self.root / "CITATION.bib").read_text()
+        for field in ("eprint = {2610.00001}", "archivePrefix = {arXiv}",
+                      "primaryClass = {cs.CL}", "doi = {10.48550/arXiv.2610.00001}",
+                      "url = {https://arxiv.org/abs/2610.00001}"):
+            self.assertIn(field, bib)
+
+    def test_arxiv_links_and_citation_fields_must_agree(self):
+        self.config["paper"] = {
+            "arxiv_id": "2610.00001", "url": "https://arxiv.org/abs/2610.00001",
+            "pdf_url": "https://arxiv.org/pdf/2610.00001", "primary_class": "cs.CL",
+        }
+        for field, value in (
+            ("arxiv_id", "2613.00001"),
+            ("url", "https://arxiv.org/abs/2610.00002"),
+            ("pdf_url", "https://example.org/2610.00001.pdf"),
+            ("primary_class", "cs.CL, example"),
+            ("doi", "10.48550/arXiv.2610.00002"),
+        ):
+            config = deepcopy(self.config)
+            config["paper"][field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                publication.validate(config)
+        config = deepcopy(self.config)
+        del config["paper"]["primary_class"]
+        with self.assertRaises(ValueError):
+            publication.validate(config)
+
     def test_invalid_urls_and_affiliation_references_are_rejected(self):
         for value in ("http://example.org/benchmark/", "https://127.0.0.1/benchmark/",
                       "https://example.org/with space/", "https://example.org/benchmark/?token=example"):

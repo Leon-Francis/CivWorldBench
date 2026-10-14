@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://leon-francis.github.io/CivWorldBench/"><img src="assets/readme/badge-project.png" width="143" alt="Project Page"></a>
-  <a href="https://leon-francis.github.io/CivWorldBench/CivWorldBench.pdf"><img src="assets/readme/badge-paper.png" width="114" alt="Paper PDF"></a>
+  <a href="https://arxiv.org/abs/2610.16450"><img src="assets/readme/badge-paper.png" width="114" alt="arXiv Paper"></a>
   <a href="https://leon-francis.github.io/CivWorldBench/#cases"><img src="assets/readme/badge-cases.png" width="184" alt="Interactive Cases"></a>
   <img src="assets/readme/badge-data.png" width="245" alt="Dataset: In preparation">
 </p>
@@ -161,7 +161,11 @@ evaluation metadata in a model's input context.
   title = {{CivWorldBench: Evaluating Language World Models in Structured Multi-Agent Sandbox Worlds}},
   author = {Li, Ang and Yu, Haofei and Tao, Zhengwei and Chen, Liang and Li, Kuan and Li, Miaomiao and Cai, Chenran and Liang, Bin and You, Jiaxuan and Wong, Kam-Fai},
   year = {2026},
-  url = {https://leon-francis.github.io/CivWorldBench/CivWorldBench.pdf}
+  eprint = {2610.16450},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.CL},
+  doi = {10.48550/arXiv.2610.16450},
+  url = {https://arxiv.org/abs/2610.16450}
 }
 ```
 

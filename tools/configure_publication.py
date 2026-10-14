@@ -129,13 +129,25 @@ def validate(config):
     if (config["dataset"]["status"] != "in_preparation"
             or config["dataset"]["repo_id"] is not None or config["dataset"]["revision"] is not None):
         raise ValueError("This code release requires dataset.status=in_preparation and no dataset repository or revision")
-    require_keys(config["paper"], {"arxiv_id", "url", "pdf_url"})
-    if config["paper"]["arxiv_id"] is not None:
-        raise ValueError("This release has no verified arXiv identifier; paper.arxiv_id must remain null")
+    require_keys(config["paper"], {"arxiv_id", "url", "pdf_url"}, {"primary_class", "doi"})
     paper = public_url(config["paper"]["url"], "paper.url")
     pdf = public_url(config["paper"]["pdf_url"], "paper.pdf_url")
-    if paper != pdf or not pdf.startswith(pages) or not urlsplit(pdf).path.lower().endswith(".pdf"):
-        raise ValueError("The paper must link to the confirmed PDF beneath the Project Page URL")
+    arxiv_id = config["paper"]["arxiv_id"]
+    if arxiv_id is None:
+        if set(config["paper"]) != {"arxiv_id", "url", "pdf_url"}:
+            raise ValueError("arXiv citation fields require a confirmed arXiv identifier")
+        if paper != pdf or not pdf.startswith(pages) or not urlsplit(pdf).path.lower().endswith(".pdf"):
+            raise ValueError("The paper must link to the confirmed PDF beneath the Project Page URL")
+    else:
+        if not isinstance(arxiv_id, str) or not re.fullmatch(r"[0-9]{2}(?:0[1-9]|1[0-2])\.[0-9]{5}", arxiv_id):
+            raise ValueError("Invalid arXiv identifier")
+        if paper != f"https://arxiv.org/abs/{arxiv_id}" or pdf != f"https://arxiv.org/pdf/{arxiv_id}":
+            raise ValueError("Paper URLs must match the confirmed arXiv identifier")
+        primary_class = text(config["paper"].get("primary_class"), "paper.primary_class")
+        if not re.fullmatch(r"[a-z][a-z0-9-]*(?:\.[A-Z][A-Z0-9-]*)?", primary_class):
+            raise ValueError("Invalid arXiv primary class")
+        if "doi" in config["paper"] and config["paper"]["doi"] != f"10.48550/arXiv.{arxiv_id}":
+            raise ValueError("The arXiv DOI must match the confirmed identifier")
     return config
 
 
@@ -161,6 +173,13 @@ def render(config):
                                "authors": people, "year": int(config["date"][:4]),
                                "url": config["paper"]["url"]},
     }
+    arxiv_id = config["paper"]["arxiv_id"]
+    if arxiv_id is not None:
+        cff["preferred-citation"]["identifiers"] = [
+            {"type": "other", "value": arxiv_id, "description": "arXiv"}
+        ]
+        if "doi" in config["paper"]:
+            cff["preferred-citation"]["doi"] = config["paper"]["doi"]
     escaped = {"\\": r"\textbackslash{}", "{": r"\{", "}": r"\}", "%": r"\%", "&": r"\&",
                "_": r"\_", "#": r"\#", "$": r"\$", "~": r"\textasciitilde{}", "^": r"\textasciicircum{}"}
 
@@ -170,10 +189,18 @@ def render(config):
     authors = " and ".join(bib(author["family_names"]) + ", " + bib(author["given_names"])
                            for author in config["authors"])
     key = re.sub(r"[^A-Za-z0-9]", "", config["project"]).lower() + config["date"][:4]
+    arxiv_fields = ""
+    if arxiv_id is not None:
+        arxiv_fields = (f"  eprint = {{{arxiv_id}}},\n"
+                        "  archivePrefix = {arXiv},\n"
+                        f"  primaryClass = {{{config['paper']['primary_class']}}},\n")
+        if "doi" in config["paper"]:
+            arxiv_fields += f"  doi = {{{config['paper']['doi']}}},\n"
     entry = (f"@misc{{{key},\n"
              f"  title = {{{{{bib(config['title'])}}}}},\n"
              f"  author = {{{authors}}},\n"
              f"  year = {{{config['date'][:4]}}},\n"
+             f"{arxiv_fields}"
              f"  url = {{{config['paper']['url']}}}\n"
              "}\n")
     return {"CITATION.cff": json.dumps(cff, indent=2, ensure_ascii=False) + "\n",
